@@ -5,6 +5,7 @@
  */
 package net.eaustria.webcrawler;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ public class WebCrawler6 implements ILinkHandler {
 
     @Override
     public void queueLink(String link) throws Exception {
+        
         startNewThread(link);
     }
 
@@ -45,13 +47,14 @@ public class WebCrawler6 implements ILinkHandler {
 
     @Override
     public boolean visited(String s) {
+        //System.out.println(s + " ist in Liste: " + visitedLinks.contains(s));
         return visitedLinks.contains(s);
     }
 
     private void startNewThread(String link) throws Exception {
         // ToDo: Use executer Service to start new LinkFinder Task!
         
-        execService.submit(new LinkFinder(url, this));
+        execService.submit(new LinkFinder(link, this));
         
     }
 
@@ -63,7 +66,7 @@ public class WebCrawler6 implements ILinkHandler {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        //new WebCrawler6("http://www.orf.at", 64).startCrawling();
-        new WebCrawler6("http://www.sickinger-solutions.at", 64).startCrawling();
+        new WebCrawler6("https://www.orf.at", 64).startCrawling();
+        //new WebCrawler6("https://www.schneglberger.bplaced.net", 64).startCrawling();
     }
 }

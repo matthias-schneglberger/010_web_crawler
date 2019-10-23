@@ -42,12 +42,20 @@ public class LinkFinder implements Runnable {
 
     @Override
     public void run() {
-        getSimpleLinks(url);
+        if(linkHandler.size() >= 500){
+                //System.out.println(System.nanoTime()-t0);
+                //System.out.println("############################################################################################################################");
+        }
+        else{
+            getSimpleLinks(url);
+        }
+        
+
     }
 
     private void getSimpleLinks(String url) {
         NodeFilter hrefNodeFilter = (Node node) -> {
-            if (node.getText().contains("a href=\"http:")) {
+            if (node.getText().contains("a href=\"http")) {
                 return true;
             } else {
                 return false;
@@ -55,9 +63,13 @@ public class LinkFinder implements Runnable {
         };
         
         
-        
+        //System.out.println(linkHandler.size());
         if(!linkHandler.visited(url)){
+            
             linkHandler.addVisited(url);
+//            System.out.print("\b\b\b\b\b");
+//            System.out.println(linkHandler.size() + "/500");
+            System.out.println(url);
             URL newURL;
            
             
@@ -72,25 +84,28 @@ public class LinkFinder implements Runnable {
                 while (iterator.hasMoreNodes()) {
                     Node node = iterator.nextNode();
                     //System.out.println(node.getText());
-                    String[] parts = node.getText().split("\"");
-                    System.out.println(parts[1]);
-                    linkHandler.queueLink((parts[1]));
-                    getSimpleLinks(parts[1]);
+                    String[] parts = node.getText().split("\"http");
+                    String tempURL = "http" + parts[1];
+                    
+                    tempURL = tempURL.split("\"")[0];
+                    
+                    //System.out.println(tempURL);
+                    if(!tempURL.contains("WARNING") || !tempURL.contains("does not contain")){
+                        linkHandler.queueLink(tempURL);
+                    }
+                    
+                    //getSimpleLinks(parts[1]);
                 }
-                System.exit(0);
-                
+                //System.out.println("####################RUNOUT " + url);
             }
             catch (Exception ex) {
-                Logger.getLogger(LinkFinder.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(LinkFinder.class.getName()).log(Level.SEVERE, null, ex);
             }
 //            
             
             
             
-            linkHandler.addVisited(url);
-            if(linkHandler.size() >= 500){
-                System.out.println(System.nanoTime()-t0);
-            }
+            
         }
         
         
