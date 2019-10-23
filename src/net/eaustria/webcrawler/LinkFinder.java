@@ -16,6 +16,11 @@ import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.htmlparser.Node;
+import org.htmlparser.NodeFilter;//
+import org.htmlparser.util.SimpleNodeIterator;
 
 public class LinkFinder implements Runnable {
 
@@ -25,9 +30,14 @@ public class LinkFinder implements Runnable {
      * Used fot statistics
      */
     private static final long t0 = System.nanoTime();
+    
+
+    
 
     public LinkFinder(String url, ILinkHandler handler) {
         //ToDo: Implement Constructor
+        this.url = url;
+        this.linkHandler = handler;
     }
 
     @Override
@@ -36,6 +46,55 @@ public class LinkFinder implements Runnable {
     }
 
     private void getSimpleLinks(String url) {
+        NodeFilter hrefNodeFilter = (Node node) -> {
+            if (node.getText().contains("a href=\"http:")) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        
+        
+        
+        if(!linkHandler.visited(url)){
+            linkHandler.addVisited(url);
+            URL newURL;
+           
+            
+            try {
+                newURL = new URL(url);
+                Parser parser = new Parser(newURL.openConnection());
+                NodeList nodes = parser.extractAllNodesThatMatch(hrefNodeFilter);
+                
+                
+                SimpleNodeIterator iterator = nodes.elements();
+                //System.out.println(nodes.size());
+                while (iterator.hasMoreNodes()) {
+                    Node node = iterator.nextNode();
+                    //System.out.println(node.getText());
+                    String[] parts = node.getText().split("\"");
+                    System.out.println(parts[1]);
+                    linkHandler.queueLink((parts[1]));
+                    getSimpleLinks(parts[1]);
+                }
+                System.exit(0);
+                
+            }
+            catch (Exception ex) {
+                Logger.getLogger(LinkFinder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+//            
+            
+            
+            
+            linkHandler.addVisited(url);
+            if(linkHandler.size() >= 500){
+                System.out.println(System.nanoTime()-t0);
+            }
+        }
+        
+        
+        
         // ToDo: Implement
         // 1. if url not already visited, visit url with linkHandler
         // 2. get url and Parse Website
