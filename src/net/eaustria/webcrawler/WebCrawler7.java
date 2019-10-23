@@ -30,7 +30,7 @@ public class WebCrawler7 implements ILinkHandler {
 
     private void startCrawling() {
         // ToDo: Invoke LinkFinderAction on threadpool        
-       
+       mainPool.invoke(new LinkFinderAction(url, this));
     }
 
     @Override
