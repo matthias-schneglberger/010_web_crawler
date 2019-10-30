@@ -9,6 +9,7 @@ package net.eaustria.webcrawler;
  *
  * @author bmayr
  */
+import java.awt.event.ActionEvent;
 import java.net.URL;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.NodeClassFilter;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Hyperlink;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;//
 import org.htmlparser.util.SimpleNodeIterator;
@@ -118,5 +120,13 @@ public class LinkFinder implements Runnable {
         // 4. If size of link handler equals 500 -> print time elapsed for statistics               
         
     }
+    
+//    public void printWithHyperlink(String s){
+//        Hyperlink link = new Hyperlink();
+//        link.setText("http://example.com");
+//        link.setOnAction((ActionEvent e) -> {
+//            System.out.println("This link is clicked");
+//        });
+//    }
 }
 

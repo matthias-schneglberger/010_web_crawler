@@ -66,7 +66,7 @@ public class WebCrawler6 implements ILinkHandler {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        new WebCrawler6("https://www.orf.at", 64).startCrawling();
-        //new WebCrawler6("https://www.schneglberger.bplaced.net", 64).startCrawling();
+        //new WebCrawler6("https://www.orf.at", 64).startCrawling();
+        new WebCrawler6("https://www.schneglberger.bplaced.net", 256).startCrawling();
     }
 }
